@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giriş Sistemi</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .corner-icons {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 1000;
+      display: flex; gap: 10px;
+    }
+
+    .corner-icons img {
+      width: 50px;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #000;
+      transition: transform 0.3s ease;
+    }
+
+    .corner-icons img:hover {
+      transform: scale(1.1);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .form-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 25px;
+      width: 300px;
+      display: none;
+    }
+
+    .form-box.active {
+      display: block;
+    }
+
+    .form-box h2 {
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .form-box input, .form-box button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .form-box button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: limegreen;
+    }
+
+    .links {
+      margin-top: 20px;
+    }
+
+    .links a {
+      color: #00bcd4;
+      cursor: pointer;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+      max-width: 400px;
+    }
+
+    .modal-content h2 {
+      color: #007BFF;
+      margin-bottom: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    #adminPanel {
+      color: white;
+      padding: 20px;
+      background-color: rgba(0,0,0,0.8);
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="corner-icons">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Flag_of_Turkey.svg" onclick="setLanguage('tr')" title="Türkçe">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Flag_of_Azerbaijan.svg" onclick="setLanguage('az')" title="Azərbaycan Türkçəsi">
+  </div>
+
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <h2 id="welcomeMessage">Hoşgeldiniz!</h2>
+      <p>Başarıyla giriş yaptınız.</p>
+    </div>
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+  </div>
+
+  <div class="container">
+    <div id="loginForm" class="form-box active">
+      <h2 id="loginTitle">Giriş Yap</h2>
+      <input type="email" id="loginEmail" placeholder="E-posta" />
+      <input type="password" id="loginPassword" placeholder="Şifre (8 karakter)" />
+      <button onclick="login()">Giriş</button>
+    </div>
+
+    <div id="registerForm" class="form-box">
+      <h2 id="registerTitle">Kayıt Ol</h2>
+      <input type="text" id="regUsername" placeholder="Kullanıcı Adı" />
+      <input type="email" id="regEmail" placeholder="E-posta" />
+      <input type="password" id="regPassword" placeholder="Şifre (8 karakter)" />
+      <button onclick="register()">Kayıt Ol</button>
+      <div id="regMessage" class="message"></div>
+    </div>
+
+    <div id="adminForm" class="form-box">
+      <h2 id="adminTitle">Admin Girişi</h2>
+      <input type="email" id="adminEmail" placeholder="Admin E-posta" />
+      <button onclick="adminLogin()">Giriş</button>
+    </div>
+
+    <div id="adminPanel">
+      <h2>Admin Paneli</h2>
+      <ul id="userList"></ul>
+    </div>
+
+    <div class="links">
+      <a onclick="showForm('loginForm')" id="linkLogin">Giriş Yap</a> |
+      <a onclick="showForm('registerForm')" id="linkRegister">Kayıt Ol</a> |
+      <a onclick="showForm('adminForm')" id="linkAdmin">Admin Girişi</a>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = "tr";
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = lang === "tr" ? {
+        loginTitle: "Giriş Yap", registerTitle: "Kayıt Ol", adminTitle: "Admin Girişi",
+        linkLogin: "Giriş Yap", linkRegister: "Kayıt Ol", linkAdmin: "Admin Girişi",
+        welcome: "Hoşgeldiniz!"
+      } : {
+        loginTitle: "Giriş", registerTitle: "Qeydiyyat", adminTitle: "Admin",
+        linkLogin: "Giriş", linkRegister: "Qeydiyyat", linkAdmin: "Admin",
+        welcome: "Xoş gəldiniz!"
+      };
+      document.getElementById("loginTitle").innerText = t.loginTitle;
+      document.getElementById("registerTitle").innerText = t.registerTitle;
+      document.getElementById("adminTitle").innerText = t.adminTitle;
+      document.getElementById("linkLogin").innerText = t.linkLogin;
+      document.getElementById("linkRegister").innerText = t.linkRegister;
+      document.getElementById("linkAdmin").innerText = t.linkAdmin;
+      document.getElementById("welcomeMessage").innerText = t.welcome;
+    }
+
+    function showForm(id) {
+      document.querySelectorAll('.form-box').forEach(f => f.classList.remove('active'));
+      document.getElementById('adminPanel').style.display = 'none';
+      document.getElementById(id).classList.add('active');
+    }
+
+    function register() {
+      const name = document.getElementById("regUsername").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const pass = document.getElementById("regPassword").value;
+      const msg = document.getElementById("regMessage");
+
+      if (!name || !email.includes("@") || pass.length < 8) {
+        msg.innerText = currentLang === "az" ? "Zəhmət olmasa məlumatları düzgün doldurun!" : "Lütfen tüm alanları doğru doldurun!";
+        msg.className = "message error";
+        return;
+      }
+
+      fetch("https://api64.ipify.org?format=json")
+        .then(res => res.json())
+        .then(data => {
+          const ip = data.ip;
+          const newUser = { name, email, ip };
+          let users = JSON.parse(localStorage.getItem("users") || "[]");
+          users.push(newUser);
+          localStorage.setItem("users", JSON.stringify(users));
+          msg.innerText = currentLang === "az" ? "Qeydiyyat uğurlu!" : "Kayıt başarılı!";
+          msg.className = "message success";
+
+          // Formu temizle
+          document.getElementById("regUsername").value = "";
+          document.getElementById("regEmail").value = "";
+          document.getElementById("regPassword").value = "";
+        });
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const pass = document.getElementById("loginPassword").value;
+      if (!email || pass.length < 8) {
+        alert(currentLang === "az" ? "E-poçt və şifrə düzgün daxil edilməyib!" : "E-posta ve şifre geçersiz!");
+        return;
+      }
+      showModal();
+    }
+
+    function showModal() {
+      document.getElementById("welcomeModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("welcomeModal").style.display = "none";
+    }
+
+    function adminLogin() {
+      const email = document.getElementById("adminEmail").value.trim();
+      if (email !== "jasunhaadmin@gmail.com") {
+        alert("Yetkisiz erişim!");
+        return;
+      }
+
+      document.getElementById("adminPanel").style.display = "block";
+      document.querySelectorAll('.form-box').forEach(f => f.classList.remove('active'));
+
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+
+      let users = JSON.parse(localStorage.getItem("users") || "[]");
+      users.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = `${user.name} (${user.email}) - IP: ${user.ip}`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
