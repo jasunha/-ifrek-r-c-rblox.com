@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Roblox Giriş Sistemi 😈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      overflow: hidden;
+      color: #fff;
+    }
+    .animated-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, #00ffcc10 0%, transparent 70%);
+      animation: pulse 4s infinite ease-in-out;
+      z-index: -1;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.3); opacity: 0.8; }
+    }
+    .container {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #0ff;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #0ff3;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    h1 {
+      font-size: 1.8em;
+      color: #ff0066;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px #ff0066aa;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background: #111;
+      color: #0f0;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 10px #0ff;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #00cccc;
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #0ff;
+    }
+    .switch-btn {
+      margin-top: 20px;
+      color: #aaa;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 25px;
+      font-size: 12px;
+      color: #888;
+    }
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+    .system {
+      display: none;
+      text-align: center;
+      padding: 50px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .error { color: #ff4444; }
+    .success { color: #00ff88; }
+    .info { color: #ffff00; }
+
+    .spinner {
+      margin: 10px auto;
+      border: 4px solid #333;
+      border-top: 4px solid #0ff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .lang-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+    }
+    .lang-selector select {
+      background-color: #111;
+      color: #fff;
+      padding: 5px 10px;
+      border: 1px solid #0ff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="animated-bg"></div>
+
+  <div class="lang-selector">
+    <select id="languageSelect" onchange="changeLanguage()">
+      <option value="tr">Türkçe</option>
+      <option value="en">English</option>
+      <option value="az">Azərbaycanca</option>
+    </select>
+  </div>
+
+  <div class="container" id="formContainer">
+    <div class="form-section active" id="loginForm">
+      <h1>Giriş Yap</h1>
+      <input type="email" id="loginEmail" placeholder="E-posta">
+      <input type="password" id="loginPassword" placeholder="Şifre">
+      <button class="btn" onclick="login()">Giriş Yap</button>
+      <div class="switch-btn" onclick="showForm('registerForm')">Kayıt Ol</div>
+      <div class="switch-btn" onclick="showForm('adminForm')">Admin Girişi</div>
+      <div class="message" id="loginMessage"></div>
+    </div>
+
+    <div class="form-section" id="registerForm">
+      <h1>Kayıt Ol</h1>
+      <input type="text" id="registerUsername" placeholder="Kullanıcı Adı">
+      <input type="email" id="registerEmail" placeholder="E-posta">
+      <input type="password" id="registerPassword" placeholder="Şifre">
+      <button class="btn" onclick="register()">Kayıt Ol</button>
+      <div class="switch-btn" onclick="showForm('loginForm')">Giriş Yap</div>
+      <div class="message" id="registerMessage"></div>
+    </div>
+
+    <div class="form-section" id="adminForm">
+      <h1>Admin Girişi</h1>
+      <input type="email" id="adminEmail" placeholder="Admin E-posta">
+      <button class="btn" onclick="adminLogin()">Giriş Yap</button>
+      <div class="switch-btn" onclick="showForm('loginForm')">Geri dön</div>
+    </div>
+
+    <div class="footer">© 2025 Tüm hakları saklıdır</div>
+  </div>
+
+  <div class="system" id="systemBox">
+    <h1 id="systemTitle">⏳ Sistem Hazırlanıyor...</h1>
+    <p id="countdownText">30 saniye içinde sistem aktif olacak.</p>
+    <div id="robloxSection" style="display:none;">
+      <p>Lütfen Roblox kullanıcı adınızı girin:</p>
+      <input type="text" id="robloxUsername" placeholder="Roblox Kullanıcı Adı">
+      <button class="btn" onclick="submitRoblox()">Gönder</button>
+      <div style="margin-top:20px; color:#aaa; font-size: 14px;">
+        Bu sistem, Roblox oyun sunucularına bağlı hesap giriş token'larını çözümler.
+      </div>
+      <div id="loadingBox" style="display:none; margin-top: 20px;">
+        <p style="color:#ffcc00; font-size: 16px;">Bu hesap çözümleniyor...</p>
+        <div class="spinner"></div>
+      </div>
+      <div id="userInfoBox" style="display:none; margin-top: 20px; color: #0f0;"></div>
+    </div>
+  </div>
+
+  <script>
+    let registeredUsers = [];
+
+    function showForm(id) {
+      document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.getElementById('loginMessage').textContent = '';
+      document.getElementById('registerMessage').textContent = '';
+    }
+
+    function changeLanguage() {
+      const lang = document.getElementById("languageSelect").value;
+
+      const translations = {
+        tr: {
+          login: "Giriş Yap",
+          register: "Kayıt Ol",
+          adminLogin: "Admin Girişi",
+          username: "Kullanıcı Adı",
+          email: "E-posta",
+          password: "Şifre",
+          systemPreparing: "Sistem Hazırlanıyor...",
+          countdownText: "30 saniye içinde sistem aktif olacak.",
+        },
+        en: {
+          login: "Login",
+          register: "Register",
+          adminLogin: "Admin Login",
+          username: "Username",
+          email: "Email",
+          password: "Password",
+          systemPreparing: "System is Preparing...",
+          countdownText: "System will be active in 30 seconds.",
+        },
+        az: {
+          login: "Giriş Et",
+          register: "Qeydiyyatdan Keç",
+          adminLogin: "Admin Girişi",
+          username: "İstifadəçi Adı",
+          email: "E-poçt",
+          password: "Şifrə",
+          systemPreparing: "Sistem Hazırlanır...",
+          countdownText: "Sistem 30 saniyə içində aktiv olacaq.",
+        }
+      };
+
+      const langData = translations[lang];
+
+      document.getElementById("loginForm").querySelector('h1').textContent = langData.login;
+      document.getElementById("registerForm").querySelector('h1').textContent = langData.register;
+      document.getElementById("adminForm").querySelector('h1').textContent = langData.adminLogin;
+      document.getElementById("loginEmail").placeholder = langData.email;
+      document.getElementById("loginPassword").placeholder = langData.password;
+      document.getElementById("registerUsername").placeholder = langData.username;
+      document.getElementById("registerEmail").placeholder = langData.email;
+      document.getElementById("registerPassword").placeholder = langData.password;
+      document.getElementById("systemTitle").textContent = langData.systemPreparing;
+      document.getElementById("countdownText").textContent = langData.countdownText;
+    }
+
+    function register() {
+      const username = document.getElementById("registerUsername").value.trim();
+      const email = document.getElementById("registerEmail").value.trim();
+      const password = document.getElementById("registerPassword").value.trim();
+      const msg = document.getElementById("registerMessage");
+
+      if (!username || !email || !password) {
+        msg.textContent = "Tüm alanları doldurun."; msg.className = "message error"; return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.textContent = "Geçerli bir e-posta girin."; msg.className = "message error"; return;
+      }
+      if (password.length < 6) {
+        msg.textContent = "Şifre en az 6 karakter."; msg.className = "message error"; return;
+      }
+
+      const ip = "192.168.1." + Math.floor(Math.random() * 255);
+      registeredUsers.push({ username, email, ip });
+
+      msg.textContent = "Kayıt başarılı!"; msg.className = "message success";
+      setTimeout(() => showForm('loginForm'), 1500);
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const msg = document.getElementById("loginMessage");
+
+      const user = registeredUsers.find(u => u.email === email);
+      if (!email || !password) {
+        msg.textContent = "Tüm alanları doldurun."; msg.className = "message error"; return;
+      }
+      if (!user) {
+        msg.textContent = "Kullanıcı bulunamadı."; msg.className = "message error"; return;
+      }
+
+      msg.textContent = "Giriş başarılı. Sistem hazırlanıyor..."; msg.className = "message info";
+      document.getElementById("formContainer").style.display = "none";
+      document.getElementById("systemBox").style.display = "block";
+
+      let countdown = 30;
+      const interval = setInterval(() => {
+        countdown--;
+        document.getElementById("countdownText").textContent = `${countdown} saniye içinde sistem aktif olacak.`;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          document.getElementById("systemTitle").textContent = "⚡ Hesap Çalma Sistemi Aktif";
+          document.getElementById("countdownText").style.display = "none";
+          document.getElementById("robloxSection").style.display = "block";
+        }
+      }, 1000);
+    }
+
+    function submitRoblox() {
+      const name = document.getElementById("robloxUsername").value.trim();
+      if (!name) return alert("Kullanıcı adı boş olamaz!");
+
+      document.getElementById("loadingBox").style.display = "block";
+      document.getElementById("userInfoBox").style.display = "none";
+
+      setTimeout(() => {
+        document.getElementById("loadingBox").style.display = "none";
+        document.getElementById("userInfoBox").innerHTML = `
+          <p><strong>Kullanıcı Adı:</strong> ${name}</p>
+          <p style="margin-top: 15px; color: yellow;"><strong>Bu hesabı onaylıyor musunuz?</strong></p>
+          <button class="btn" onclick="startVerification()">Onayla</button>
+        `;
+        document.getElementById("userInfoBox").style.display = "block";
+      }, 5000);
+    }
+
+    function startVerification() {
+      const box = document.getElementById("userInfoBox");
+      box.innerHTML = `
+        <p style="color: #0f0; margin-bottom: 10px;">Onaylanıyor...</p>
+        <div style="width: 100%; background: #333; border-radius: 20px; overflow: hidden;">
+          <div id="greenBar" style="width: 0%; height: 20px; background: linear-gradient(90deg, #0f0, #0ff); transition: width 3s;"></div>
+        </div>
+      `;
+
+      let width = 0;
+      const bar = document.getElementById("greenBar");
+      const interval = setInterval(() => {
+        if (width >= 100) {
+          clearInterval(interval);
+          box.innerHTML = `
+            <p style="color:#00ff88; font-size: 16px; margin-top: 15px;">✅ Hesap bilgileriniz e-postadan gönderildi.</p>
+            <p style="color:#0f0; font-size: 18px; font-weight: bold;">🎉 Hesabınız onaylandı!</p>
+          `;
+        } else {
+          width += 2;
+          bar.style.width = width + "%";
+        }
+      }, 60);
+    }
+
+    function adminLogin() {
+      const email = document.getElementById("adminEmail").value.trim();
+      if (email !== "jasunhaadmin@gmail.com") {
+        alert("Yetkisiz giriş!"); return;
+      }
+
+      let list = "Kayıtlı Kullanıcılar:\n\n";
+      registeredUsers.forEach(u => {
+        list += `E-posta: ${u.email}\nKullanıcı Adı: ${u.username}\nIP: ${u.ip}\n---\n`;
+      });
+
+      alert(list || "Henüz kayıtlı kullanıcı yok.");
+    }
+  </script>
+</body>
+</html>
