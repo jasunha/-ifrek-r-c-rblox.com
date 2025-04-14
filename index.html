@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siber Kalkan - Savaş İlanı</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Share+Tech+Mono&family=Rubik+Glitch&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: #111;
+      padding: 2rem 1rem 1rem 1rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 3px solid #ff003c;
+    }
+
+    .main-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      margin: 0;
+      color: #ff003c;
+      text-shadow: 0 0 15px #ff003c, 0 0 30px #ff8c00;
+      animation: flicker 2s infinite alternate;
+    }
+
+    .subtitle {
+      font-family: 'Rubik Glitch', cursive;
+      font-size: 1.6rem;
+      color: #00ffc3;
+      margin-top: 0.5rem;
+      letter-spacing: 3px;
+      animation: glowSubtitle 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowSubtitle {
+      from {
+        text-shadow: 0 0 5px #00ffc3;
+      }
+      to {
+        text-shadow: 0 0 20px #00ffc3, 0 0 40px #00ffc3;
+      }
+    }
+
+    @keyframes flicker {
+      from { opacity: 1; }
+      to { opacity: 0.8; text-shadow: 0 0 5px #ff003c; }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: rgba(30, 30, 30, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255, 0, 60, 0.3);
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .emoji {
+      font-size: 1.3rem;
+      margin-right: 0.5rem;
+    }
+
+    p {
+      line-height: 1.7;
+      font-size: 1.15rem;
+      transition: all 0.3s ease;
+    }
+
+    p:hover {
+      color: #ff8c00;
+      transform: scale(1.02);
+    }
+
+    strong {
+      color: #ff003c;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ff003c, transparent);
+      margin: 2rem 0;
+      animation: pulseLine 4s infinite;
+    }
+
+    @keyframes pulseLine {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="main-title">🚨 DİJİTAL DOLANDIRICILARA KARŞI SAVAŞ BAŞLADI 🚨</h1>
+    <div class="subtitle">🛡️ SİBER KALKAN ⚡ AKTİF 🛡️</div>
+  </div>
+
+  <div class="container">
+    <p><span class="emoji">🚫</span><strong>Roblox hesaplarını çalmaya çalışanlara</strong>, çocukları dijital tuzaklarla kandıranlara karşı savaş açıyoruz!</p>
+    <p><span class="emoji">🛑</span><strong>Bu saatten sonra kimseyi kandıramayacaksınız!</strong></p>
+    <p><span class="emoji">🛡️</span>Çocukların hesapları ve kişisel bilgileri güven altında olacak!</p>
+    <p><span class="emoji">🚀</span>Çünkü <strong>Siber Kalkan</strong>'ı kurduk.</p>
+
+    <hr>
+
+    <p><span class="emoji">💻</span>Her dolandırıcılık sitesi ve sahte link <strong>ifşa edilecek</strong>.</p>
+    <p><span class="emoji">🔍</span>Dolandırıcılar <strong>izleniyor</strong>, tespit ediliyor, engelleniyor.</p>
+    <p><span class="emoji">📢</span>Toplum <strong>bilinçlendiriliyor</strong>, çocuklar korunuyor.</p>
+
+    <hr>
+
+    <p><span class="emoji">⚠️</span>Bu bir uyarı değil, <strong>savaş ilanıdır!</strong></p>
+    <p><span class="emoji">🛡️</span><strong>Siber Kalkan</strong> artık burada ve asla geri adım atmayacak.</p>
+    <p><span class="emoji">🔥</span>Dolandırıcılar için dijital dünya artık güvenli değil.</p>
+    <p><span class="emoji">⚔️</span><strong>Savaş başladı. Kazanan biz olacağız.</strong></p>
+  </div>
+</body>
+</html>
